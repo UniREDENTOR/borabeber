@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "567820973111",
+    "firebase_url": "https://borabeber-9b765.firebaseio.com",
+    "project_id": "borabeber-9b765",
+    "storage_bucket": "borabeber-9b765.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567820973111:android:1be7ab5ef39dfa68",
+        "android_client_info": {
+          "package_name": "br.com.raphaelframos.borabeber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567820973111-gdr36tr5l69acg52mui5kno3r8pg3k1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.raphaelframos.borabeber",
+            "certificate_hash": "ad15ee6bf589c6cbf3daece6319e0d3bef95c17a"
+          }
+        },
+        {
+          "client_id": "567820973111-tun7nah499e18nmmme5p4vr07q8om0l3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ1SwNy2pYmVvADB4w_acthawJ0oGhGqs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567820973111-tun7nah499e18nmmme5p4vr07q8om0l3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
