@@ -1,7 +1,10 @@
 package br.com.raphaelframos.borabeber.model;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -86,4 +89,23 @@ public class Bar {
     public LatLng getPosition() {
         return new LatLng(getLatitude(), getLongitude());
     }
+
+    public String getBebidasDemonstracao() {
+        String resultado = "";
+        for(Bebida bebida: bebidas){
+               resultado += bebida.getDemonstracao();
+            resultado += "\n";
+        }
+        return resultado;
+    }
+
+    public String getDistancia(Location distancia) {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        DecimalFormat formato = new DecimalFormat("#.#");
+        return formato.format(distancia.distanceTo(location));
+    }
+
+
 }

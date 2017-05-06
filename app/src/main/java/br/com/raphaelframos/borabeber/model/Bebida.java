@@ -24,4 +24,8 @@ public class Bebida {
     public void setValor(Double valor) {
         this.valor = valor;
     }
+
+    public String getDemonstracao() {
+        return nome + " - " + valor;
+    }
 }
