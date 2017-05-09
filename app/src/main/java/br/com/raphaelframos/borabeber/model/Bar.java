@@ -20,6 +20,7 @@ public class Bar {
     private Double longitude;
     private String endereco;
     private String promocao;
+    private String horario;
     private ArrayList<Bebida> bebidas;
 
     public String getDescricao() {
@@ -107,5 +108,18 @@ public class Bar {
         return formato.format(distancia.distanceTo(location));
     }
 
+    public Integer getDistanciaInteira(Location distancia) {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return (int) distancia.distanceTo(location);
+    }
 
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+    }
 }
