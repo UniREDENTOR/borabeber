@@ -13,20 +13,23 @@
         android:layout_height="wrap_content" />
 
     <TableLayout
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableRow>
+        <TableRow android:layout_margin="5dp">
             <TextView
+                android:textStyle="bold"
                 android:text="Distância:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <SeekBar
+                android:layout_weight="1"
                 android:id="@+id/seekDistancia"
                 android:max="5000"
                 android:layout_marginLeft="5dp"
-                android:layout_width="match_parent"
+                android:layout_width="0dip"
                 android:layout_height="wrap_content" />
 
             <TextView
@@ -36,17 +39,19 @@
 
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_margin="5dp">
             <TextView
+                android:textStyle="bold"
                 android:text="Valor da cerveja até:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <SeekBar
+                android:layout_weight="1"
                 android:id="@+id/seekValor"
                 android:max="10"
                 android:layout_marginLeft="5dp"
-                android:layout_width="match_parent"
+                android:layout_width="0dip"
                 android:layout_height="wrap_content" />
 
             <TextView
@@ -55,19 +60,28 @@
                 android:layout_height="wrap_content" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_margin="5dp">
             <TextView
                 android:text="Tipo:"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <Spinner android:layout_width="match_parent"
+            <Spinner android:layout_width="0dip"
+                android:layout_weight="1"
                 android:id="@+id/spinnerTipos"
                 android:entries="@array/tipos"
                 android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"></Spinner>
         </TableRow>
     </TableLayout>
+
+    <Button
+        android:layout_margin="10dp"
+        android:text="Limpar"
+        android:id="@+id/buttonLimpar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
     <Button

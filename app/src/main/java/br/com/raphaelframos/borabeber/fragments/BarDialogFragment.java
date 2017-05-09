@@ -52,7 +52,7 @@ public class BarDialogFragment extends DialogFragment {
         textViewTipo.setText(bar.getTipo());
         textViewEndereco.setText(bar.getEndereco());
         textViewBebidas.setText(bar.getBebidasDemonstracao());
-        textViewDistancia.setText("Distância: " + bar.getDistancia(minhaLocalizacao) + "m");
+        textViewDistancia.setText(bar.getDistancia(minhaLocalizacao) + "m");
 
         getDialog().setTitle("Estabelecimento");
     }

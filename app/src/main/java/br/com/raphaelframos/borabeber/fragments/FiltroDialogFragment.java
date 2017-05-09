@@ -23,6 +23,7 @@ public class FiltroDialogFragment extends DialogFragment {
     private SeekBar seekBarDistancia;
     private Spinner spinnerTipos;
     private Button buttonBuscar;
+    private Button buttonLimpar;
     private TextView textViewValorCerveja;
     private TextView textViewValorDistancia;
     private AtualizaMapa atualizaMapa;
@@ -42,6 +43,7 @@ public class FiltroDialogFragment extends DialogFragment {
         textViewValorCerveja = (TextView) getView().findViewById(R.id.textViewValorCerveja);
         textViewValorDistancia = (TextView) getView().findViewById(R.id.textViewValorDistancia);
         buttonBuscar = (Button) getView().findViewById(R.id.buttonBuscar);
+        buttonLimpar = (Button) getView().findViewById(R.id.buttonLimpar);
 
         seekBarDistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -87,9 +89,28 @@ public class FiltroDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+
+        buttonLimpar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                atualizaMapa.limpa();
+            }
+        });
+    }
+
+    public void setAtualizaCallback(AtualizaMapa atualizaCallback){
+        this.atualizaMapa = atualizaCallback;
     }
 
     public interface AtualizaMapa{
         void atualiza(int valor, int distancia, String tipo);
+        void limpa();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        getDialog().setTitle("Filtros");
     }
 }

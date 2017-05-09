@@ -3,4 +3,5 @@
     <color name="colorPrimary">#ffa500</color>
     <color name="colorPrimaryDark">#ff8c00</color>
     <color name="colorAccent">#000</color>
+    <color name="cinza">#b4b2b2</color>
 </resources>

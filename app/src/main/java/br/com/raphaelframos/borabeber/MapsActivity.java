@@ -3,11 +3,9 @@ package br.com.raphaelframos.borabeber;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,19 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -60,7 +55,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest mLocationRequest;
     private DatabaseReference mDatabase;
     private Location location;
-    private ArrayList<Bar> bares;
+    private ArrayList<Bar> baresEncontrados;
     private ProgressDialog progressDialog;
 
 
@@ -105,6 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bar.setEndereco("Coronel Pimenta, 1, Centro");
         bar.setNome("Boemia");
         bar.setPromocao("2 Skols por 10");
+        bar.setHorario("Quinta a sábado - 20h as 0h");
         bar.setTipo("Bar");
         bar.setLatitude(-21.2036102);
         bar.setLongitude(-41.8861522);
@@ -131,7 +127,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         bar2.setEndereco("Outra rua, 2, Centro");
         bar2.setNome("QualQual");
         bar2.setPromocao("");
-        bar2.setTipo("Bar");
+        bar.setHorario("Segunda a sexta - 18h as 23h");
+        bar2.setTipo("Restaurante");
         bar2.setLatitude(-21.2137120);
         bar2.setLongitude(-41.8962552);
         ArrayList<Bebida> bebidas2 = new ArrayList<>();
@@ -174,8 +171,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()){
-                    Bares bares = data.getValue(Bares.class);
-                    mostraBares(bares.getBares());
+                    Bares baresCadastrados = data.getValue(Bares.class);
+                    mostraBares(baresCadastrados.getBares());
+                    baresEncontrados = baresCadastrados.getBares();
                 }
             }
 
@@ -288,6 +286,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()){
             case R.id.action_filtro:
                 FiltroDialogFragment filtroDialogFragment = new FiltroDialogFragment();
+                filtroDialogFragment.setAtualizaCallback(this);
                 filtroDialogFragment.show(getSupportFragmentManager(), "filtro");
                 break;
         }
@@ -299,29 +298,74 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         atualizaMapa(valor, distancia, tipo);
     }
 
+    @Override
+    public void limpa() {
+        populaMapa(baresEncontrados);
+    }
+
     public void atualizaMapa(int valor, int distancia, String tipo){
         ArrayList<Bar> baresFiltrados = new ArrayList<>();
-        for(Bar bar : bares){
-            if(!tipo.equalsIgnoreCase("Todos")){
+        boolean checkTipo = !tipo.equalsIgnoreCase("Todos");
+        boolean checkDistancia = distancia != 0;
+        boolean checkValor = valor != 0;
+
+        for(Bar bar : baresEncontrados){
+            if(checkDistancia && checkTipo && checkValor){
+                if(bar.getTipo().equalsIgnoreCase(tipo) && (bar.getDistanciaInteira(location) <= distancia)) {
+                    for (Bebida bebida : bar.getBebidas()) {
+                        if (bebida.getValor() < valor) {
+                            baresFiltrados.add(bar);
+                            break;
+                        }
+                    }
+                }
+            }else if(checkDistancia && checkTipo){
+                if(bar.getTipo().equalsIgnoreCase(tipo) && (bar.getDistanciaInteira(location) <= distancia)) {
+                    baresFiltrados.add(bar);
+                }
+            }else if(checkDistancia && checkValor){
+                if(bar.getDistanciaInteira(location) <= distancia) {
+                    for (Bebida bebida : bar.getBebidas()) {
+                        if (bebida.getValor() < valor) {
+                            baresFiltrados.add(bar);
+                            break;
+                        }
+                    }
+                }
+            }else if(checkTipo && checkValor){
+                if(bar.getTipo().equalsIgnoreCase(tipo)) {
+                    for (Bebida bebida : bar.getBebidas()) {
+                        if (bebida.getValor() < valor) {
+                            baresFiltrados.add(bar);
+                            break;
+                        }
+                    }
+                }
+            }else if(checkDistancia){
+                if(bar.getDistanciaInteira(location) <= distancia) {
+                    baresFiltrados.add(bar);
+                }
+            }else if(checkTipo){
                 if(bar.getTipo().equalsIgnoreCase(tipo)) {
                     baresFiltrados.add(bar);
                 }
-            }
-
-            if(distancia != 0) {
-                if (bar.getDistanciaInteira(location) <= distancia) {
-                    baresFiltrados.add(bar);
-                }
-            }
-
-            if(valor != 0){
-                for(Bebida bebida : bar.getBebidas()){
-                    if(bebida.getValor() < valor){
+            }else if(checkValor) {
+                for (Bebida bebida : bar.getBebidas()) {
+                    if (bebida.getValor() < valor) {
                         baresFiltrados.add(bar);
                         break;
                     }
                 }
             }
+
         }
+        populaMapa(baresFiltrados);
+    }
+
+    private void populaMapa(ArrayList<Bar> baresFiltrados) {
+        progressDialog.show();
+        mMap.clear();
+        mostraMinhaLocalizacao();
+        mostraBares(baresFiltrados);
     }
 }
