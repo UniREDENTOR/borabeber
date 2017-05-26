@@ -27,6 +27,7 @@ public class BarDialogFragment extends DialogFragment {
     private TextView textViewPromocao;
     private TextView textViewBebidas;
     private TextView textViewDistancia;
+    private TextView textViewHorario;
     private Location minhaLocalizacao;
 
     @Override
@@ -38,6 +39,29 @@ public class BarDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        atribuiViewsPeloId();
+
+        try {
+            textViewNome.setText(bar.getNome());
+            textViewDescricao.setText(bar.getDescricao());
+            textViewPromocao.setText(bar.getPromocao());
+            textViewTipo.setText(bar.getTipo());
+            textViewEndereco.setText(bar.getEndereco());
+            textViewBebidas.setText(bar.getBebidasDemonstracao());
+            textViewHorario.setText(bar.getHorario());
+            try{
+                textViewDistancia.setText(bar.getDistancia(minhaLocalizacao) + "m");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            getDialog().setTitle("Estabelecimento");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void atribuiViewsPeloId() {
         textViewBebidas = (TextView) getView().findViewById(R.id.textViewBebidas);
         textViewDescricao = (TextView) getView().findViewById(R.id.textViewDescricao);
         textViewEndereco = (TextView) getView().findViewById(R.id.textViewEndereco);
@@ -45,16 +69,7 @@ public class BarDialogFragment extends DialogFragment {
         textViewPromocao = (TextView) getView().findViewById(R.id.textViewPromocao);
         textViewNome = (TextView) getView().findViewById(R.id.textViewNome);
         textViewDistancia = (TextView) getView().findViewById(R.id.textViewDistancia);
-
-        textViewNome.setText(bar.getNome());
-        textViewDescricao.setText(bar.getDescricao());
-        textViewPromocao.setText(bar.getPromocao());
-        textViewTipo.setText(bar.getTipo());
-        textViewEndereco.setText(bar.getEndereco());
-        textViewBebidas.setText(bar.getBebidasDemonstracao());
-        textViewDistancia.setText(bar.getDistancia(minhaLocalizacao) + "m");
-
-        getDialog().setTitle("Estabelecimento");
+        textViewHorario = (TextView) getView().findViewById(R.id.textViewHorario);
     }
 
     public void setBar(Bar bar) {

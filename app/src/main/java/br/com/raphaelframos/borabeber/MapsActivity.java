@@ -1,16 +1,26 @@
 package br.com.raphaelframos.borabeber;
 
+import android.*;
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,6 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Location location;
     private ArrayList<Bar> baresEncontrados;
     private ProgressDialog progressDialog;
+    private boolean foiLocalizado = false;
 
 
     protected void createLocationRequest() {
@@ -84,36 +95,83 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        if(!isLocationEnabled(this)){
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage("Localização desabilitada. Habilite para continuar");
+            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //this will navigate user to the device location settings screen
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            AlertDialog alert = dialog.create();
+            alert.show();
+        }
+
+    }
+
+    private void inicia() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Buscando bares...");
         progressDialog.show();
         criaBares();
-
     }
 
     private void criaBares() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        /*
         //Criando o bar
         Bar bar = new Bar();
-        bar.setDescricao("Melhor bar da cidade");
-        bar.setEndereco("Coronel Pimenta, 1, Centro");
+        bar.setDescricao("Digite a descricao do bar");
+        bar.setEndereco("Coronel Pimenta");
         bar.setNome("Boemia");
-        bar.setPromocao("2 Skols por 10");
-        bar.setHorario("Quinta a sábado - 20h as 0h");
-        bar.setTipo("Bar");
+        bar.setPromocao("Digite a promocao");
+        bar.setHorario("Digite o horario de funcionamento");
+        bar.setTipo("Digite o tipo");
+        //Escreva a latitude igual o exemplo abaixo
         bar.setLatitude(-21.2036102);
+        //Escreva a longitude igual o exemplo abaixo
         bar.setLongitude(-41.8861522);
+
+
+        Bar barLeandra = new Bar();
+        barLeandra.setHorario("19h-0h");
+        barLeandra.setNome("Redentor");
+        barLeandra.setTipo("Restaurante");
+
+        ArrayList<Bebida> bebidasDaLeandra = new ArrayList<>();
+        Bebida bebidaNumeroUm = new Bebida();
+        bebidaNumeroUm.setNome("Skol");
+        bebidaNumeroUm.setValor(6.5);
+        bebidaNumeroUm.setTipo("Litrao");
+        bebidasDaLeandra.add(bebidaNumeroUm);
+
+
+        barLeandra.setBebidas(bebidasDaLeandra);
+
+
         //Criando as bebidas
         ArrayList<Bebida> bebidas = new ArrayList<>();
+
+
         Bebida bebida = new Bebida();
-        bebida.setNome("Skol");
+        bebida.setNome("Digite o nome da bebida");
+        //Coloque o valor igual o exemplo abaixo. Com . ao inves de ,
         bebida.setValor(6.0);
         bebidas.add(bebida);
 
         Bebida bebida2 = new Bebida();
-        bebida2.setValor(5.0);
-        bebida2.setNome("Bavaria");
+        bebida2.setNome("Digite o nome da bebida");
+        //Coloque o valor igual o exemplo abaixo. Com . ao inves de ,
+        bebida2.setValor(4.0);
+
+
+
+
         //Adicionando as bebidas na lista
         bebidas.add(bebida);
         bebidas.add(bebida2);
@@ -123,23 +181,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         Bar bar2 = new Bar();
-        bar2.setDescricao("Outro bar da cidade");
-        bar2.setEndereco("Outra rua, 2, Centro");
-        bar2.setNome("QualQual");
-        bar2.setPromocao("");
-        bar.setHorario("Segunda a sexta - 18h as 23h");
-        bar2.setTipo("Restaurante");
+        bar2.setDescricao("Digite a descricao");
+        bar2.setEndereco("Digite o endereco");
+        bar2.setNome("Digite o nome");
+        bar2.setPromocao("Digite a promocao");
+        bar.setHorario("Digite o horario");
+        bar2.setTipo("Digite o tipo");
+        //Latitude e longitude igual ao de cima
         bar2.setLatitude(-21.2137120);
         bar2.setLongitude(-41.8962552);
         ArrayList<Bebida> bebidas2 = new ArrayList<>();
         Bebida bebida3 = new Bebida();
-        bebida3.setNome("Brahma");
+        bebida3.setNome("Nome da bebida");
         bebida3.setValor(6.0);
         bebidas2.add(bebida);
 
         Bebida bebida4 = new Bebida();
         bebida4.setValor(5.0);
-        bebida4.setNome("Antartica");
+        bebida4.setNome("Nome da bebida");
         bebidas2.add(bebida3);
         bebidas2.add(bebida4);
 
@@ -164,9 +223,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final ArrayList<Bar> bars = new ArrayList<>();
         bars.add(bar);
         bars.add(bar2);
+        bars.add(barLeandra);
         bares.setBares(bars);
-        bares.setChild("bares");
+
+
+
+
+
+
         mDatabase.child(bares.getChild()).setValue(bares);
+        */
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -174,6 +240,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Bares baresCadastrados = data.getValue(Bares.class);
                     mostraBares(baresCadastrados.getBares());
                     baresEncontrados = baresCadastrados.getBares();
+                    progressDialog.dismiss();
                 }
             }
 
@@ -182,6 +249,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
+
     }
 
     private void mostraBares(ArrayList<Bar> bares) {
@@ -189,7 +257,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for(Bar bar : bares){
             mostraNoMapa(bar);
         }
-        progressDialog.hide();
+        progressDialog.dismiss();
     }
 
     private void mostraNoMapa(Bar bar) {
@@ -213,6 +281,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
         }catch (Exception e){
             e.printStackTrace();
+            progressDialog.dismiss();
         }
 
     }
@@ -225,15 +294,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
+        Log.v("", "Minha localizacao " + location);
         mostraMinhaLocalizacao();
-
     }
 
     public void mostraMinhaLocalizacao(){
-        LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Eu").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        try {
+            LatLng minhaLocalizacao = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(minhaLocalizacao).title("Eu").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(minhaLocalizacao, 16));
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -362,10 +435,71 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         populaMapa(baresFiltrados);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.v("", "Permissao " + requestCode + " e " + permissions + " grant " + grantResults);
+        switch (requestCode) {
+            case 123: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    inicia();
+                } else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.setTitle("Atenção");
+                    alert.setMessage("Você precisa liberar as permissões de localização nas configurações.");
+                    alert.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                    alert.show();
+                }
+            }
+        }
+
+    }
+
     private void populaMapa(ArrayList<Bar> baresFiltrados) {
         progressDialog.show();
         mMap.clear();
         mostraMinhaLocalizacao();
         mostraBares(baresFiltrados);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            inicia();
+        }else{
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    123);
+        }
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
     }
 }

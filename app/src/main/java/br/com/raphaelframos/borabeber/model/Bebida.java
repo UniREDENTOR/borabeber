@@ -8,6 +8,7 @@ public class Bebida {
 
     private String nome;
     private Double valor;
+    private String tipo;
 
     public String getNome() {
         return nome;
@@ -27,5 +28,13 @@ public class Bebida {
 
     public String getDemonstracao() {
         return nome + " - " + valor;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }

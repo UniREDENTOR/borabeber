@@ -94,6 +94,7 @@ public class FiltroDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 atualizaMapa.limpa();
+                dismiss();
             }
         });
     }

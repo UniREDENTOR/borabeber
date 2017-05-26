@@ -88,7 +88,12 @@ public class Bar {
     }
 
     public LatLng getPosition() {
-        return new LatLng(getLatitude(), getLongitude());
+        try{
+            return new LatLng(getLatitude(), getLongitude());
+
+        }catch (Exception e){
+            return  new LatLng(0,0);
+        }
     }
 
     public String getBebidasDemonstracao() {
